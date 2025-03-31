@@ -8,10 +8,14 @@ import { Buffer } from "node:buffer";
 dotenv.config();
 
 const CONFLUENCE_API = process.env.VITE_CONFLUENCE_API;
-const BASE_URL = process.env.VITE_BASE_URL;
+
+if (!CONFLUENCE_API) {
+  throw new Error("❌ VITE_CONFLUENCE_API is not defined in environment.");
+}
 
 export default defineConfig({
   plugins: [tailwindcss(), react(), mdx()],
+  // 개발 환경에서만 작동함
   server: {
     proxy: {
       "/api/confluence": {
@@ -19,7 +23,7 @@ export default defineConfig({
         changeOrigin: true,
 
         rewrite: (path) => {
-          const url = new URL(BASE_URL + path);
+          const url = new URL("http://localhost" + path);
           const pageId = url.searchParams.get("pageId");
           const spaceKey = url.searchParams.get("spaceKey") || "P10K1M";
           const list = url.pathname.includes("/pages");

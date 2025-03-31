@@ -1,7 +1,7 @@
 import { ConfluenceEndpoints } from "./endpoints";
 
 export const fetchConfluenceSearch = async (q: string) => {
-  const res = await fetch(`${ConfluenceEndpoints.SEARCH}?q=${q}`);
+  const res = await fetch(ConfluenceEndpoints.SEARCH(q));
   if (!res.ok) throw new Error("Search fetch failed");
   return res.json();
 };
