@@ -2,18 +2,16 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
-    "lib": ["ES2023", "DOM"], // ✅ DOM 추가
-    "module": "ESNext",
-    "jsx": "react-jsx", // ✅ JSX 명시
+    "lib": ["ES2023", "DOM"],
+    "module": "NodeNext", // 변경: ESNext → NodeNext
+    "jsx": "react-jsx",
     "types": ["node"],
-
     "skipLibCheck": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "nodenext", // 변경: bundler → nodenext
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
