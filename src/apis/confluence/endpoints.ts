@@ -1,10 +1,5 @@
-const getBaseUrl = () => {
-  return import.meta.env.DEV
-    ? "/api/confluence" // ✅ 로컬 개발 서버 → 프록시 사용
-    : import.meta.env.VITE_CONFLUENCE_API; // ✅ 배포 시 → 직접 호출
-};
-
+// 클라이언트에서 호출할 서버리스 API 경로
 export const ConfluenceEndpoints = {
-  SEARCH: (q: string) => `${getBaseUrl()}/search?q=${q}`,
-  PAGE: (id: string) => `${getBaseUrl()}/page?pageId=${id}`,
+  SEARCH: (q: string) => `/api/confluence/search?q=${q}`,
+  PAGE: (id: string) => `/api/confluence/page?pageId=${id}`,
 };
