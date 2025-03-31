@@ -14,6 +14,7 @@ if (!CONFLUENCE_API) {
 }
 
 export default defineConfig({
+  assetsInclude: ["**/*.html"],
   plugins: [tailwindcss(), react(), vercel()],
   // 개발 환경에서만 작동하는 프록시 설정
   server: {

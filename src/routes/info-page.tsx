@@ -148,12 +148,11 @@ export default function InfoPage() {
                 height: "100%",
                 borderRadius: 3,
                 boxShadow: 2,
-                bgcolor: "#fff",
+
                 transition: "all 0.3s ease",
                 "&:hover": {
                   transform: "scale(1.015)",
                   boxShadow: 6,
-                  bgcolor: "#f9f9f9",
                 },
               }}
             >
