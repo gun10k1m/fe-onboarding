@@ -7,16 +7,19 @@ import { Buffer } from "node:buffer";
 
 dotenv.config();
 
+const CONFLUENCE_API = process.env.VITE_CONFLUENCE_API;
+const BASE_URL = process.env.VITE_BASE_URL;
+
 export default defineConfig({
   plugins: [tailwindcss(), react(), mdx()],
   server: {
     proxy: {
       "/api/confluence": {
-        target: "https://10t1m.atlassian.net/wiki/rest/api",
+        target: CONFLUENCE_API,
         changeOrigin: true,
 
         rewrite: (path) => {
-          const url = new URL("http://localhost" + path);
+          const url = new URL(BASE_URL + path);
           const pageId = url.searchParams.get("pageId");
           const spaceKey = url.searchParams.get("spaceKey") || "P10K1M";
           const list = url.pathname.includes("/pages");
