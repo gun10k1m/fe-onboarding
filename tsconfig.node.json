@@ -3,11 +3,11 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
     "lib": ["ES2023", "DOM"],
-    "module": "NodeNext", // 변경: ESNext → NodeNext
+    "module": "NodeNext", // Node의 ESM 방식에 맞게 변경
     "jsx": "react-jsx",
     "types": ["node"],
     "skipLibCheck": true,
-    "moduleResolution": "nodenext", // 변경: bundler → nodenext
+    "moduleResolution": "nodenext", // Node의 ESM 해석 방식 사용
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
