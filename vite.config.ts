@@ -8,15 +8,16 @@ import vercel from "vite-plugin-vercel";
 dotenv.config();
 
 const CONFLUENCE_API = process.env.VITE_CONFLUENCE_API;
-
 if (!CONFLUENCE_API) {
   throw new Error("❌ VITE_CONFLUENCE_API is not defined in environment.");
 }
 
-export default defineConfig({
-  assetsInclude: ["**/*.html"],
-  plugins: [tailwindcss(), react(), vercel()],
-  // 개발 환경에서만 작동하는 프록시 설정
+export default defineConfig(({ mode }) => ({
+  plugins: [
+    tailwindcss(),
+    react(),
+    ...(mode === "development" ? [vercel()] : []),
+  ],
   server: {
     proxy: {
       "/api/confluence": {
@@ -33,16 +34,13 @@ export default defineConfig({
           if (isSearch && query) {
             return `/content/search?cql=title~"${query}" AND space="${spaceKey}"`;
           }
-
           if (list) {
             return `/content?spaceKey=${spaceKey}&type=page&expand=version,ancestors`;
           }
-
           if (pageId) {
             return `/content/${pageId}?expand=body.view`;
           }
-
-          return ""; // fallback
+          return "";
         },
         configure: (proxy) => {
           proxy.on("proxyReq", (proxyReq) => {
@@ -61,4 +59,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
