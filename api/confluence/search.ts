@@ -1,30 +1,36 @@
-// ✅ api/confluence/search.ts (Vercel API Route)
+// Vercel API Route (api/confluence/search.ts)
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-export default async function handler(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const query = searchParams.get("q");
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const q = req.query.q as string;
   const spaceKey = "P10K1M";
 
-  if (!query) {
-    return new Response("Missing 'q' query", { status: 400 });
+  if (!q) {
+    return res.status(400).send("Query is required");
   }
 
-  const response = await fetch(
-    `https://10t1m.atlassian.net/wiki/rest/api/content/search?cql=title~"${query}" AND space="${spaceKey}"`,
-    {
+  const email = process.env.CONFLUENCE_EMAIL;
+  const token = process.env.CONFLUENCE_TOKEN;
+
+  if (!email || !token) {
+    return res.status(500).send("Missing credentials");
+  }
+
+  const auth = Buffer.from(`${email}:${token}`).toString("base64");
+  const url = `https://10t1m.atlassian.net/wiki/rest/api/content/search?cql=title~"${q}" AND space="${spaceKey}"`;
+
+  try {
+    const confluenceRes = await fetch(url, {
       headers: {
-        Authorization: `Basic ${Buffer.from(
-          `${process.env.CONFLUENCE_EMAIL}:${process.env.CONFLUENCE_TOKEN}`
-        ).toString("base64")}`,
+        Authorization: `Basic ${auth}`,
         Accept: "application/json",
       },
-    }
-  );
+    });
 
-  if (!response.ok) {
-    return new Response("Confluence API failed", { status: 500 });
+    const data = await confluenceRes.json();
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error("❌ Confluence fetch error", err);
+    return res.status(500).send("Internal Server Error");
   }
-
-  const data = await response.json();
-  return new Response(JSON.stringify(data), { status: 200 });
 }

@@ -5,6 +5,7 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "types": ["vite/client", "@mdx-js/react"]
+    "types": ["vite/client", "@mdx-js/react", "node"],
+    "lib": ["ESNext", "DOM"]
   }
 }

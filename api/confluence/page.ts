@@ -1,29 +1,40 @@
-// ✅ api/confluence/page.ts (Vercel API Route)
+// ✅ api/confluence/page.ts (Vercel Node API Route)
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-export default async function handler(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const pageId = searchParams.get("pageId");
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const pageId = req.query.pageId as string;
 
   if (!pageId) {
-    return new Response("Missing 'pageId' query", { status: 400 });
+    return res.status(400).send("Missing 'pageId' query");
   }
 
-  const response = await fetch(
-    `https://10t1m.atlassian.net/wiki/rest/api/content/${pageId}?expand=body.view`,
-    {
+  const email = process.env.CONFLUENCE_EMAIL;
+  const token = process.env.CONFLUENCE_TOKEN;
+
+  if (!email || !token) {
+    return res.status(500).send("Missing credentials");
+  }
+
+  const auth = Buffer.from(`${email}:${token}`).toString("base64");
+  const url = `https://10t1m.atlassian.net/wiki/rest/api/content/${pageId}?expand=body.view`;
+
+  try {
+    const confluenceRes = await fetch(url, {
       headers: {
-        Authorization: `Basic ${Buffer.from(
-          `${process.env.CONFLUENCE_EMAIL}:${process.env.CONFLUENCE_TOKEN}`
-        ).toString("base64")}`,
+        Authorization: `Basic ${auth}`,
         Accept: "application/json",
       },
+    });
+
+    if (!confluenceRes.ok) {
+      console.error("❌ Confluence fetch failed", await confluenceRes.text());
+      return res.status(500).send("Confluence API failed");
     }
-  );
 
-  if (!response.ok) {
-    return new Response("Confluence API failed", { status: 500 });
+    const data = await confluenceRes.json();
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error("❌ Confluence fetch error", err);
+    return res.status(500).send("Internal Server Error");
   }
-
-  const data = await response.json();
-  return new Response(JSON.stringify(data), { status: 200 });
 }
