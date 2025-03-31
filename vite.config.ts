@@ -1,9 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import mdx from "@mdx-js/rollup";
 import dotenv from "dotenv";
 import { Buffer } from "node:buffer";
+import vercel from "vite-plugin-vercel";
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ if (!CONFLUENCE_API) {
 }
 
 export default defineConfig({
-  plugins: [tailwindcss(), react(), mdx()],
+  plugins: [tailwindcss(), react(), vercel()],
   // 개발 환경에서만 작동함
   server: {
     proxy: {
