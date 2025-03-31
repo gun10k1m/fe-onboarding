@@ -5,7 +5,6 @@ export default function HtmlViewer({ html }: { html: string }) {
     <Box
       sx={{
         width: "100%",
-        backgroundColor: "#fafafa",
         p: 3,
         borderRadius: 2,
         boxShadow: 1,
