@@ -1,8 +1,8 @@
 // ✅ api/confluence/page.ts (Vercel Node API Route)
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+// import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const pageId = req.query.pageId as string;
+export default async function handler(req, res) {
+  const pageId = req.query.pageId;
 
   if (!pageId) {
     return res.status(400).send("Missing 'pageId' query");

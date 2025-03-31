@@ -1,8 +1,8 @@
 // Vercel API Route (api/confluence/search.ts)
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+// import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const q = req.query.q as string;
+export default async function handler(req, res) {
+  const q = req.query.q;
   const spaceKey = "P10K1M";
 
   if (!q) {
